@@ -1,34 +1,40 @@
-from analyzer.analyze_result import AnalyzeResult
+from analyzer.result_type import ResultType
+
+from analyzer.states.wait import WaitState
 
 
 class LexicalAnalyzer:
-
     def __init__(self, service_words: dict):
         self.service_words = service_words
-        self.ignore_symbols = ['\n', '\r', '\t']
-        self.switch = False
 
-    def __is_ignore_symb(self, symb: str) -> bool:
-        return symb.isspace() or symb in self.ignore_symbols
+        self.state = WaitState()
+        self.word = ''
 
-    def __is_service_words(self, string: str) -> bool:
-        return string in self.service_words
+        self.lexems = []
+        self.idents = []
+        self.consts = []
 
-    def analyze(self, program: str) -> AnalyzeResult:
-        result = AnalyzeResult()
-
-        word = ''
-        for i in range(len(program)):
-            if self.__is_ignore_symb(program[i]):
-                continue
-
-            if self.switch:
-                print()
-                word = ''
-
-            word += program[i]
-
-            if self.__is_service_words(program[i]):
-                result.add_lexem(0, self.service_words[word])
-
-        return result
+    def input(self, symb: str):
+        res = self.state.input(self, symb)
+        if res == ResultType.ignore:
+            return
+        match res:
+            case ResultType.ident:
+                if self.word not in self.idents:
+                    self.idents.append(self.word)
+                self.lexems.append((200, self.idents.index(self.word)))
+            case ResultType.service_or_ident:
+                if self.word in self.service_words:
+                    self.lexems.append((0, self.service_words[self.word]))
+                else:
+                    if self.word not in self.idents:
+                        self.idents.append(self.word)
+                    self.lexems.append((200, self.idents.index(self.word)))
+            case ResultType.const:
+                if self.word not in self.consts:
+                    self.consts.append(self.word)
+                self.lexems.append((300, self.consts.index(self.word)))
+        if self.state.remainder != '' and not self.state.remainder.isspace():
+            rem = self.state.remainder
+            self.state.remainder = ''
+            self.input(rem)

@@ -1,9 +1,9 @@
-var a, b, c: integer;
+var a, b, i: integer;
 begin
-	b = 100;
-	c = 11;
-	for a = 1 to 10 do begin
-		b = b - c;
+	a = 101;
+	b = 2;
+	for i = 1 to 100 do begin
+		a = a + b;
 	end;
-	write(b, c);
+	write(a, b);
 end 
