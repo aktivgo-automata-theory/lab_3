@@ -1,0 +1,15 @@
+var	1
+begin	2
+end	3
+write	4
+integer	5
+for	6
+to	7
+do	8
+-	101
+=	102
+(	103
+)	104
+,	105
+:	106
+;	107
