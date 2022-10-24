@@ -9,7 +9,7 @@ class IdentState:
     def input(self, la: LexicalAnalyzer, symb: str) -> ResultType:
         if not symb.isalpha() and not symb.isdigit():
             from analyzer.states.wait import WaitState
-            la.state = WaitState()
+            la.state = WaitState(symb)
             return ResultType.ident
         la.word += symb
         return ResultType.ignore

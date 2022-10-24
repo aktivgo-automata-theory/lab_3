@@ -8,7 +8,7 @@ class WordState:
     def input(self, la, symb: str) -> ResultType:
         if not symb.isalpha() and not symb.isdigit():
             from analyzer.states.wait import WaitState
-            la.state = WaitState()
+            la.state = WaitState(symb)
             return ResultType.service_or_ident
         la.word += symb
         if symb.isdigit():

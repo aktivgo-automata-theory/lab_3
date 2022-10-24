@@ -3,7 +3,7 @@ from analyzer.result_type import ResultType
 
 class ConstState:
 
-    def __init_(self, remainder: str = ''):
+    def __init__(self, remainder: str = ''):
         self.remainder = remainder
 
     def input(self, la, symb: str) -> ResultType:
